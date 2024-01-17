@@ -1,0 +1,123 @@
+﻿@using BeautyPoly.View.Areas.Admin.ViewModels;
+@model AccountViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Danh sách tài khoản</h1>
+<div class="card-body p-1">
+
+    <div class="col-12">
+        <div class="font-weight-bold row m-0">
+            <div class="col-12 col-md-3 col-lg-3 p-1">
+                <div class="form-group m-0">
+                    <label>Từ khóa</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control form-control-sm" id="account_keyword" placeholder="Từ khóa ..." />
+                        <div class="input-group-append">
+                            <button class="btn btn-success btn-sm" onclick="return GetAll();">
+                                <i class="bx bx-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-hover table-bordered w-100" id="table_account">
+        <thead>
+            <tr>
+                <th style="width:10%">
+                    <button class="btn btn-primary btn-sm" id="btn_add_account" onclick="add()">
+                        <i class="bx bx-plus"></i>
+                    </button>
+                </th>
+                <th>Mã</th>
+                <th>Họ và tên</th>
+                <th>Chức vụ</th>
+                <th>Email</th>
+                <th>Số điện thoại</th>
+                <th>Ngày tạo</th>
+                <th>Trạng thái</th>
+            </tr>
+        </thead>
+        <tbody id="tbody_account">
+            <tr>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div id="modal_account" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm tài khoản</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <input type="number" value="0" id="accountid_account" hidden />
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="account_code_account" placeholder="Mã tài khoản">
+                            <label for="account_code_account">Mã tài khoản</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="account_fullname_account" placeholder="Họ và tên">
+                            <label for="account_fullname_account">Họ và tên</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="account_email_account" placeholder="Email">
+                            <label for="account_email_account">Email</label>
+                        </div>
+                    </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="account_phone_account" placeholder="Số điện thoại">
+                                <label for="account_phone_account">Số điện thoại</label>
+                            </div>
+                        </div>
+                </div>
+
+
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="id_roleaccount">
+                        <option value="1"></option>
+                    </select>
+                    <label for="floatingSelect">Chức vụ</label>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label>Trạng thái tài khoản</label><br />
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="isactive_account" checked="">
+                            <label class="form-check-label" for="isactive_account">
+                                Hoạt động
+                            </label>
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn_save_account" onclick="create()">Lưu</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/account.js" asp-append-version="true"></script>
+    }
+
+

@@ -1,0 +1,533 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.2.0/exceljs.min.js"></script>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Quản lý hóa đơn</h5>
+        <div class="form-group m-0">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control form-control-sm" id="order_keyword" placeholder="Từ khóa ..." />
+                    <div class="input-group-append">
+                        <button class="btn btn-success btn-sm" >
+                            <i class="bx bx-search"></i>
+                        </button>
+                    </div>
+                </div>
+            
+
+            
+        </div>
+        <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
+            <li style="width:5%"><a class="btn btn-success btn-sm" id="btn_add_orderProduct" onclick="add()" title="Thêm hóa đơn">Thêm<i class="bx bx-plus"></i></a></li>
+            <li style="width:5%"><a class="btn btn-success btn-sm" id="btn_add_orderProduct" onclick="exportToExcel()" title="Thêm hóa đơn">Export<i class="bx bx-plus"></i></a></li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-home" type="button" role="tab" aria-controls="home" aria-selected="true">Chờ xác nhận</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-profile" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">Chuẩn bị hàng</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#bordered-contact" type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">Đã xuất kho</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="home-tab1" data-status="4" data-bs-toggle="tab" data-bs-target="#bordered-home1" type="button" role="tab" aria-controls="home1" aria-selected="false" tabindex="-1">Hoàn đơn/Hủy hàng</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="home-tab2" data-status="5" data-bs-toggle="tab" data-bs-target="#bordered-home2" type="button" role="tab" aria-controls="home2" aria-selected="false" tabindex="-1">Giao thành công</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="home-tab3" data-status="0" data-bs-toggle="tab" data-bs-target="#bordered-home3" type="button" role="tab" aria-controls="home3" aria-selected="false" tabindex="-1">Tất cả</button>
+            </li>
+        </ul>
+        <div class="tab-content pt-2" id="borderedTabContent">
+
+            <div class="tab-pane fade active show " id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="table-responsive" style="max-height:50vh">
+
+                    <table class="table table-striped table-hover table-bordered table-responsive" id="table_order" style="width:150%">
+                        <thead>
+                            <tr>
+                                <th class="bg-primary text-center" style="width:5%"></th>
+                                <th class="bg-primary text-center" style="width:7%">STT</th>
+                                <th class="bg-primary text-center" style="width:20%">Mã đơn</th>
+                                <th class="bg-primary text-center" style="width:10%;white-space:nowrap">Tên nhân viên</th>
+                                <th class="bg-primary text-center" style="width:20%;white-space:nowrap">Tên khách hàng</th>
+                                <th class="bg-primary text-center" style="width:10%">SĐT</th>
+                                <th class="bg-primary text-center" style="width:35%">Địa chỉ</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Đơn giá</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Giảm giá</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Tổng tiền</th>
+                                <th class="bg-primary text-center" style="width:15%">PTTT</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Phương thức mua</th>
+                                <th class="bg-primary text-center" style="width:12%;white-space:nowrap">Ngày đặt hàng</th>
+                                <th class="bg-primary text-center" style="width:12%;white-space:nowrap">Ngày giao hàng</th>
+                                <th class="bg-primary text-center" style="width:12%;white-space:nowrap">Ngày thanh toán</th>
+                                <th class="bg-primary text-center" style="width:10%;white-space:nowrap">Ghi chú</th>
+                                <th class="bg-primary text-center" style="white-space:nowrap">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody_order_hc">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row ">
+                    <div class="col-6 justify-content-start">
+                        <button type="button" onclick="confirmOrder()" class="btn btn-success">Xác nhận(Chuẩn bị hàng)</button>
+                        <button type="button" onclick="payOrder()" class="btn btn-primary">Thanh toán</button>
+                    </div>
+                    <div class=" col-6 d-flex justify-content-end">
+                        <button type="button" onclick="cancelOrder()" class="btn btn-danger">Hủy đơn</button>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="tab-pane fade " id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="table-responsive" style="max-height:50vh">
+                    <table class="table table-striped table-hover table-bordered" id="table_order" style="width:150%">
+                        <thead>
+                            <tr>
+                                <th class="bg-primary text-center" style="width:5%"></th>
+                                <th class="bg-primary text-center" style="width:7%">STT</th>
+                                <th class="bg-primary text-center" style="width:20%">Mã đơn</th>
+                                <th class="bg-primary text-center" style="width:10%;white-space:nowrap">Tên nhân viên</th>
+                                <th class="bg-primary text-center" style="width:20%;white-space:nowrap">Tên khách hàng</th>
+                                <th class="bg-primary text-center" style="width:10%">SĐT</th>
+                                <th class="bg-primary text-center" style="width:35%">Địa chỉ</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Đơn giá</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Giảm giá</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Tổng tiền</th>
+                                <th class="bg-primary text-center" style="width:15%">PTTT</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Phương thức mua</th>
+                                <th class="bg-primary text-center" style="width:12%;white-space:nowrap">Ngày đặt hàng</th>
+                                <th class="bg-primary text-center" style="width:12%;white-space:nowrap">Ngày giao hàng</th>
+                                <th class="bg-primary text-center" style="width:12%;white-space:nowrap">Ngày thanh toán</th>
+                                <th class="bg-primary text-center" style="width:10%;white-space:nowrap">Ghi chú</th>
+                                <th class="bg-primary text-center" style="white-space:nowrap">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody_order_dd">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+
+                    <div class="col-6 justify-content-start">
+                        <button type="button" onclick="confirmOrder()" class="btn btn-success">Xác nhận</button>
+                        <button type="button" onclick="payOrder()" class="btn btn-primary">Thanh toán</button>
+                    </div>
+                    <div class="col-6 d-flex justify-content-end">
+                        <button type="button" onclick="cancelOrder()" class="btn btn-danger">Hủy đơn</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="tab-pane fade" id="bordered-contact" role="tabpanel" aria-labelledby="contact-tab">
+                <div class="table-responsive" style="max-height:50vh">
+                    <table class="table table-striped table-hover table-bordered" id="table_order" style="width:150%">
+                        <thead>
+                            <tr>
+                                <th class="bg-primary text-center" style="width:5%"></th>
+                                <th class="bg-primary text-center" style="width:7%">STT</th>
+                                <th class="bg-primary text-center" style="width:20%">Mã đơn</th>
+                                <th class="bg-primary text-center" style="width:10%;white-space:nowrap">Tên nhân viên</th>
+                                <th class="bg-primary text-center" style="width:20%;white-space:nowrap">Tên khách hàng</th>
+                                <th class="bg-primary text-center" style="width:10%">SĐT</th>
+                                <th class="bg-primary text-center" style="width:35%">Địa chỉ</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Đơn giá</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Giảm giá</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Tổng tiền</th>
+                                <th class="bg-primary text-center" style="width:15%">PTTT</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Phương thức mua</th>
+                                <th class="bg-primary text-center" style="width:12%;white-space:nowrap">Ngày đặt hàng</th>
+                                <th class="bg-primary text-center" style="width:12%;white-space:nowrap">Ngày giao hàng</th>
+                                <th class="bg-primary text-center" style="width:12%;white-space:nowrap">Ngày thanh toán</th>
+                                <th class="bg-primary text-center" style="width:10%;white-space:nowrap">Ghi chú</th>
+                                <th class="bg-primary text-center" style="white-space:nowrap">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody_order_cgh">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-6 justify-content-start">
+                        <button type="button" onclick="confirmOrder()" class="btn btn-success">Xác nhận</button>
+                        <button type="button" onclick="payOrder()" class="btn btn-primary">Thanh toán</button>
+                    </div>
+                    <div class=" col-6 d-flex justify-content-end">
+                        <button type="button" onclick="cancelOrder()" class="btn btn-danger">Hủy đơn</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="tab-pane fade" id="bordered-home1" role="tabpanel" aria-labelledby="home-tab1">
+                <div class="table-responsive" style="max-height:50vh">
+                    <table class="table table-striped table-hover table-bordered" id="table_order" style="width:150%">
+                        <thead>
+                            <tr>
+                                <th class="bg-primary text-center" style="width:5%"></th>
+                                <th class="bg-primary text-center" style="width:7%">STT</th>
+                                <th class="bg-primary text-center" style="width:20%">Mã đơn</th>
+                                <th class="bg-primary text-center" style="width:10%;white-space:nowrap">Tên nhân viên</th>
+                                <th class="bg-primary text-center" style="width:20%;white-space:nowrap">Tên khách hàng</th>
+                                <th class="bg-primary text-center" style="width:10%">SĐT</th>
+                                <th class="bg-primary text-center" style="width:35%">Địa chỉ</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Đơn giá</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Giảm giá</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Tổng tiền</th>
+                                <th class="bg-primary text-center" style="width:15%">PTTT</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Phương thức mua</th>
+                                <th class="bg-primary text-center" style="width:12%;white-space:nowrap">Ngày đặt hàng</th>
+                                <th class="bg-primary text-center" style="width:12%;white-space:nowrap">Ngày giao hàng</th>
+                                <th class="bg-primary text-center" style="width:12%;white-space:nowrap">Ngày thanh toán</th>
+                                <th class="bg-primary text-center" style="width:10%;white-space:nowrap">Ghi chú</th>
+                                <th class="bg-primary text-center" style="white-space:nowrap">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody_order_hd">
+                        </tbody>
+                    </table>
+                </div>
+                @* <div class="row ">
+
+                    <div class="col-6 justify-content-start">
+                        <button type="button" onclick="confirmOrder()" class="btn btn-success">Xác nhận</button>
+                        <button type="button" onclick="payOrder()" class="btn btn-primary">Thanh toán</button>
+                    </div>
+                    <div class=" col-6 d-flex justify-content-end">
+                        <button type="button" onclick="cancelOrder()" class="btn btn-danger">Hủy đơn</button>
+                    </div>
+
+                </div> *@
+            </div>
+            <div class="tab-pane fade" id="bordered-home2" role="tabpanel" aria-labelledby="home-tab2">
+                <div class="table-responsive" style="max-height:50vh">
+                    <table class="table table-striped table-hover table-bordered" id="table_order" style="width:150%">
+                        <thead>
+                            <tr>
+                                <th class="bg-primary text-center" style="width:5%"></th>
+                                <th class="bg-primary text-center" style="width:7%">STT</th>
+                                <th class="bg-primary text-center" style="width:20%">Mã đơn</th>
+                                <th class="bg-primary text-center" style="width:10%;white-space:nowrap">Tên nhân viên</th>
+                                <th class="bg-primary text-center" style="width:20%;white-space:nowrap">Tên khách hàng</th>
+                                <th class="bg-primary text-center" style="width:10%">SĐT</th>
+                                <th class="bg-primary text-center" style="width:35%">Địa chỉ</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Đơn giá</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Giảm giá</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Tổng tiền</th>
+                                <th class="bg-primary text-center" style="width:15%">PTTT</th>
+                                <th class="bg-primary text-center" style="width:15%;white-space:nowrap">Phương thức mua</th>
+                                <th class="bg-primary text-center" style="width:12%;white-space:nowrap">Ngày đặt hàng</th>
+                                <th class="bg-primary text-center" style="width:12%;white-space:nowrap">Ngày giao hàng</th>
+                                <th class="bg-primary text-center" style="width:12%;white-space:nowrap">Ngày thanh toán</th>
+                                <th class="bg-primary text-center" style="width:10%;white-space:nowrap">Ghi chú</th>
+                                <th class="bg-primary text-center" style="white-space:nowrap">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody_order_gtc">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div><!-- End Bordered Tabs -->
+
+    </div>
+</div>
+@* <!-- Nội dung trang -->
+<div class="card-body p-1">
+    <div class="font-weight-bold row m-0">
+
+
+        <!-- Display order statuses horizontally as buttons -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Trạng thái đơn hàng</h5>
+                    <div class="col-12 col-md-3 col-lg-3 p-1">
+                    </div>
+                    <div>
+                        <!-- Bordered Tabs -->
+                        <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
+                            <li style="width:5%"><a class="btn btn-success btn-sm" id="btn_add_orderProduct" onclick="add()"><i class="bx bx-plus"></i></a></li>
+
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link " id="home-tab" data-status="1" data-bs-toggle="tab" data-bs-target="#bordered-home" type="button" role="tab" aria-controls="home" aria-selected="false" tabindex="-1">Đơn hàng chờ</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="profile-tab" data-status="2" data-bs-toggle="tab" data-bs-target="#bordered-profile" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">Đã duyệt</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="contact-tab" data-status="3" data-bs-toggle="tab" data-bs-target="#bordered-contact" type="button" role="tab" aria-controls="contact" aria-selected="true">Chờ giao hàng</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="home-tab1" data-status="4" data-bs-toggle="tab" data-bs-target="#bordered-home1" type="button" role="tab" aria-controls="home1" aria-selected="false" tabindex="-1">Hoàn đơn/hủy hàng</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="home-tab2" data-status="5" data-bs-toggle="tab" data-bs-target="#bordered-home2" type="button" role="tab" aria-controls="home2" aria-selected="false" tabindex="-1">Giao thành công</button>
+                            </li>
+                              <li>
+                            <button type="button" style="margin-left:50px" onclick="confirmOrder()" class="btn btn-success">Xác nhận</button>
+                            </li>
+                            <li>
+                            <button type="button" style="margin-left:20px" onclick="cancelOrder()" class="btn btn-danger">Hủy đơn</button>
+                            </li>
+                            <li>
+                            <button type="button" style="margin-left:20px" onclick="payOrder()" class="btn btn-primary">Thanh toán</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content pt-2" id="borderedTabContent">
+                        <div class="tab-pane fade" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
+                            <div class=" table-responsive container" style="max-height:70vh !important;">
+                            </div>
+                            <div class="justify-content-end">
+                                <button type="button" style="margin-left:50px" onclick="confirmOrder()" class="btn btn-success">Xác nhận</button>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="table-responsive container">
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="bordered-contact" role="tabpanel" aria-labelledby="contact-tab">
+                            <div class="table-responsive container" style="max-height:70vh !important">
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="bordered-home1" role="tabpanel" aria-labelledby="home-tab1">
+                            <div class="table-responsive container" style="max-height:70vh !important">
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="bordered-home2" role="tabpanel" aria-labelledby="home-tab2">
+                            <div class="table-responsive container" style="max-height:70vh !important">
+                            </div>
+
+                        </div>
+                    </div><!-- End Bordered Tabs -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>  
+*@
+<div id="modal_order" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tạo hóa đơn</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
+                            @*                 <li>
+                            <button type="button" class="btn btn-success btn-sm" id="btn_add_orderProduct" onclick="addOrder()">
+                            <i class="bx bx-plus"></i>
+                            </button>
+                            </li> *@
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="home-tab22" data-bs-toggle="tab" data-bs-target="#bordered-home" type="button" role="tab" aria-controls="home" aria-selected="true">Hoán đơn</button>
+                            </li>
+
+                        </ul>
+
+                        <div class="tab-content pt-2" id="borderedTabContent">
+                            <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
+                                <input type="number" value="0" id="orderid_order" hidden />
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="order_code" class="form-label">Mã đơn</label>
+                                                <input type="text" class="form-control" id="order_code" readonly style="background-color: #f9f4ee;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="customer_phone" class="form-label">SĐT</label>
+                                                <input type="text" class="form-control" id="customer_phone">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="customer_name" class="form-label">Tên khách hàng</label>
+                                                <input type="text" class="form-control" id="customer_name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="payment_method" class="form-label">Phương thức thanh toán</label>
+                                                <select class="form-control" id="payment_method">
+                                                    <option value="cash">Tiền mặt</option>
+                                                    <option value="credit_card">Thẻ tín dụng</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="purchase_method" class="form-label">Phương thức mua hàng</label>
+                                                <select class="form-control" id="purchase_method">
+                                                    <option value="online">Online</option>
+                                                    <option value="off">Mua tại quầy</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="address" class="form-label">Địa chỉ</label>
+                                                <textarea type="text" class="form-control" id="customer_address"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 col-md-6">
+                                            <label for="note" class="form-label">Ghi chú</label>
+                                            <textarea class="form-control" id="order_note"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <table class="table table-responsive">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th style="width:5%"><a class="btn btn-success btn-sm" id="btn_add_orderProduct" onclick="addSanPham()"><i class="bx bx-plus"></i></a></th>
+                                                <th style="width:30%">Sản phẩm</th>
+                                                <th style="width:20%">Giá</th>
+                                                <th style="width:20%">Số lượng</th>
+                                                <th style="width:25%">Giá bán</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody_product">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div><!-- End Bordered Tabs -->
+
+                        </div>
+                    </div>
+                    <div>
+                        <span class="error-message" id="error-message" style="color: red;float:right;margin-right:5%"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="btn_save_order" onclick="createOrder()">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* <div id="showHD2" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tạo hóa đơn</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="invoice-header">
+                    <h2>Cửa hàng BeatyPoly</h2>
+                    <h4 class="invoice-date">Ngày: <span id="dateExport"></span></h4>
+                    <h4 class="invoice-number">Số hóa đơn: <span id="orderCodeExport"></span></h4>
+                    <h3 class="invoice-title">HÓA ĐƠN CHI TIẾT</h3>
+                </div>
+                <div class="customer-details">
+                    <h4>Tên thu ngân: Admin</h4>
+                    <h4>Tên khách hàng: <span id="customerNameExport"></span></h4>
+                    <h4>SĐT: <span id="customerPhoneExport"></span></h4>
+                    <h4>Địa chỉ: <span id="customerArdessExport"></span></h4>
+                </div>
+                <div class="invoice-items">
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>Tên Sản Phẩm</th>
+                                <th>Số Lượng</th>
+                                <th>Đơn Giá</th>
+                            </tr>
+                        </thead>
+                        <tbody class = "prodOrderExport">
+                            <tr>
+                                <td>Nước hoa 1</td>
+                                <td>1</td>
+                                <td>1.500.000</td>
+                            </tr>
+                            <tr>
+                                <td>Phấn phủ 1</td>
+                                <td>1</td>
+                                <td>500.000</td>
+                            </tr>
+                            <tr>
+                                <td>Kem dưỡng 1</td>
+                                <td>1</td>
+                                <td>1.500.000</td>
+                            </tr>
+                            <!-- Add more rows if needed -->
+                        </tbody>
+                    </table>
+                    <div class="invoice-summary">
+                        <h4>Tổng tiền hàng: <span id="totalPriceExport"></span></h4>
+                        <h4>Giảm giá: %</h4>
+                        <h4>Tổng tiền thanh toán: <span id="totalPayport"></span></h4>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> *@
+<div id="showHD" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tạo hóa đơn</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="invoice-header">
+                    <h2>Cửa hàng BeatyPoly</h2>
+                    <h4 class="invoice-date">Ngày: <span id="dateExport"></span></h4>
+                    <h4 class="invoice-number">Số hóa đơn: <span id="orderCodeExport"></span></h4>
+                    <h3 class="invoice-title">HÓA ĐƠN CHI TIẾT</h3>
+                </div>
+                <div class="customer-details">
+                    <h4>Tên thu ngân: Admin</h4>
+                    <h4>Tên khách hàng: <span id="customerNameExport"></span></h4>
+                    <h4>SĐT: <span id="customerPhoneExport"></span></h4>
+                    <h4>Địa chỉ: <span id="customerArdessExport"></span></h4>
+                </div>
+                <div class="invoice-items">
+                    <table class="table table-bordered">
+                        <thead class="table">
+                            <tr>
+                                <th>Tên Sản Phẩm</th>
+                                <th>Số Lượng</th>
+                                <th>Đơn Giá</th>
+                            </tr>
+                        </thead>
+                        <tbody class="prodOrderExport">
+                            <!-- Your table rows will be dynamically populated here -->
+                        </tbody>
+                    </table>
+                    <div class="invoice-summary">
+                        <h4>Tổng tiền hàng: <span id="totalPriceExport"></span></h4>
+                        <h4>Giảm giá: %</h4>
+                        <h4>Tổng tiền thanh toán: <span id="totalPayport"></span></h4>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/order.js" asp-append-version="true"></script>
+}

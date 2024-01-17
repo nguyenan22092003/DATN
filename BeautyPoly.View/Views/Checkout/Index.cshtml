@@ -1,0 +1,224 @@
+﻿@{
+    ViewData["Title"] = "Check Out";
+}
+<main class="main-content">
+
+    <!--== Start Page Header Area Wrapper ==-->
+    <nav aria-label="breadcrumb" class="breadcrumb-style1">
+        <div class="container">
+            <ol class="breadcrumb justify-content-center">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+            </ol>
+        </div>
+    </nav>
+    <!--== End Page Header Area Wrapper ==-->
+    <!--== Start Shopping Checkout Area Wrapper ==-->
+    <section class="shopping-checkout-wrap section-space">
+        <div class="container">
+            <div class="checkout-page-coupon-wrap">
+                <!--== Start Checkout Coupon Accordion ==-->
+                <div class="coupon-accordion" id="CouponAccordion">
+                    <div class="card">
+                        <h3>
+                            <i class="fa fa-info-circle"></i>
+                            Have a Coupon?
+                            <a href="#/" data-bs-toggle="collapse" data-bs-target="#couponaccordion">Click here to enter your code</a>
+                        </h3>
+                        <div id="couponaccordion" class="collapse" data-bs-parent="#CouponAccordion">
+                            <div class="card-body">
+                                <div class="apply-coupon-wrap">
+                                    <p>If you have a coupon code, please apply it below.</p>
+                                    <form action="#" method="post">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <input class="form-control" type="text" id="coupon_code" placeholder="Coupon code">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <button type="button" class="btn-coupon" onclick="addCoupon()">Apply coupon</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <br />
+                                    <div id="coupon_note" display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--== End Checkout Coupon Accordion ==-->
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <!--== Start Billing Accordion ==-->
+                    <div class="checkout-billing-details-wrap">
+                        <h2 class="title">Billing details</h2>
+                        <div class="billing-form-wrap">
+                            <form action="#" method="post">
+                                <input type="hidden" id="total_hidden" />
+                                <input type="hidden" id="discount_hidden" value="0"/>
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label>Họ tên <span class="text-danger">(*)</span></label>
+                                        <span class="text-danger" id="mess_fullname"></span>
+                                        <input class="form-control" type="text" name="fullname" id="fullname_ck">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label>Địa chỉ <span class="text-danger">(*)</span></label>
+                                        <span class="text-danger" id="mess_andress"></span>
+                                        <input class="form-control" type="text" id="andress_ck" placeholder="">
+                                        <input class="form-control" type="hidden" id="adress_detail">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label>E-mail<span class="text-danger">(*)</span></label>
+                                        <span class="text-danger" id="mess_email"></span>
+                                        <input class="form-control" name="email" type="text" id="email_ck">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label>Chọn Tỉnh/thành<span class="text-danger">(*)</span></label>
+                                        <span class="text-danger" id="mess_provin"></span>
+                                        <select class="custom-select form-control" asp-items="@ViewBag.Provin" id="provin">
+                                            <option selected value="0">Chọn tỉnh thành</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label>Số điện thoại<span class="text-danger">(*)</span></label>
+                                        <span class="text-danger" id="mess_phone"></span>
+                                        <input class="form-control" name="phonenumber" type="text" id="phone_ck">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label>Chọn Quận/Huyện<span class="text-danger">(*)</span></label>
+                                        <span class="text-danger" id="mess_district"></span>
+                                        <select class="custom-select form-control" id="district">
+                                            <option selected value="0">Chọn quận huyện </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label for="exampleFormControlTextarea1" class="form-label">Ghi chú</label>
+                                        <textarea class="form-control" name="note" id="note_ck" rows="3"></textarea>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label>Chọn Phường/Xã<span class="text-danger">(*)</span></label>
+                                        <span class="text-danger" id="mess_ward"></span>
+                                        <select class="custom-select form-control" id="ward" name="ward">
+                                            <option selected value="0">Chọn Phường Xã</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--== End Billing Accordion ==-->
+                </div>
+                <div class="col-lg-6">
+                    <!--== Start Order Details Accordion ==-->
+                    <div class="checkout-order-details-wrap">
+                        <div class="order-details-table-wrap table-responsive">
+                            <h2 class="title mb-25">Your order</h2>
+                           
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="product-name">Product</th>
+                                        <th class="product-total">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-body" id="tbody_checkout_product">
+                                   
+                                </tbody>
+                                <tfoot class="table-foot">
+                                    <tr class="cart-subtotal">
+                                        <th>Subtotal</th>
+                                        <td id="subtotal_checkout">£89.99</td>
+                                    </tr>
+                                    <tr class="shipping">
+                                        <th>Shipping</th>
+                                        <td id="total_ship">0 ₫</td>
+                                       
+                                    </tr>
+                                    <tr>
+                                        <th>Discount</th>
+                                        <td id="value">0 ₫</td>
+                                    </tr>
+                                    <tr class="order-total">
+                                        <th>Total </th>
+                                        <td id="total_value">0 ₫</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <br />
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="icon">
+                                    <span><i class="bx bxs-coupon" style="font-size: 2em;"></i>Beauty Voucher</span>
+                                </div>
+                                <a href="#/" onclick="onVoucher()">Chọn phiếu giảm giá</a>
+                            </div>
+                            <div id="voucher_note" display: none;"></div>
+                            <div class="modal fade" id="modal_voucher" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Beauty Voucher</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div id="checkout_voucher">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer d-flex justify-content-between align-items-center">
+                                            <a class="btn" onclick="clearVoucher()">Hủy</a>
+                                            <a  class="btn" onclick="addVoucher()">Áp dụng</a>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </div>
+                            <div class="shop-payment-method">
+                                <div id="PaymentMethodAccordion">
+                                   
+                                    <div class="card">
+                                        <div class="card-header" id="check_payments2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
+                                                <label class="form-check-label" for="flexRadioDefault1">
+                                                    Thanh toán khi nhận hàng
+                                                </label>
+                                            </div>
+                                          
+                                        </div>
+                                      
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header" id="check_payments3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" >
+                                                <label class="form-check-label" for="flexRadioDefault2">
+                                                    Thanh toán bằng VNPay
+                                                </label>
+                                            </div>
+                                        </div>
+                                       
+                                    </div>
+                                   
+                                </div>
+                                <p class="p-text">Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="#/">privacy policy.</a></p>
+                                <div class="agree-policy">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="privacy" class="custom-control-input visually-hidden">
+                                        <label for="privacy" class="custom-control-label">I have read and agree to the website terms and conditions <span class="required">*</span></label>
+                                    </div>
+                                </div>
+                                <a onclick="CreateOrder()" class="btn-place-order">Place order</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--== End Order Details Accordion ==-->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--== End Shopping Checkout Area Wrapper ==-->
+
+</main>
+<script src="~/js/checkout.js" asp-append-version="true"></script>

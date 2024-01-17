@@ -1,0 +1,94 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using BeautyPoly.Data.ViewModels.Customer;
+@model CustomerViewModel
+
+<div class="container-fluid pt-5" style="margin-top:150px !important; ">
+    <!-- This script got from frontendfreecode.com -->
+
+    <div class="tabs-verical m-5">
+        <h3>
+            @if (User.IsInRole("Customer"))
+            {
+                @User.Identity.Name
+            }
+        </h3>
+        <div class="row">
+            <div class="col-3">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active py-4" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true" name="v-pills-home-tab">
+                        Thông tin cá nhân
+                    </a>
+                    <a class="nav-link py-4" href="/Customer/OrderCustomer">
+                        Đơn Hàng
+                    </a>
+
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="tab-content" id="v-pills-tabContent">
+                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <form href="/Customer/EditCustomer" method="post">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input type="hidden" asp-for="CustomerId" />
+                                    <div class="form-group">
+                                        <label class="control-label">Họ và tên</label>
+                                        <input asp-for="FullName" class="form-control" />
+                                        <span asp-validation-for="FullName" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label">Số điện thoại</label>
+                                        <input asp-for="Phone" class="form-control" />
+                                        <span asp-validation-for="Phone" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Email" class="control-label">Email</label>
+                                        <input asp-for="Email" disabled class="form-control" />
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="DateBirth" class="control-label">Ngày sinh</label>
+                                        <input asp-for="DateBirth" type="date" class="form-control" />
+                                        <span asp-validation-for="DateBirth" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Address" class="control-label">Địa chỉ</label>
+                                        <input asp-for="Address" type="text" class="form-control" />
+                                        <span asp-validation-for="Address" class="text-danger"></span>
+                                    </div>
+                                    @* <div class="form-group">
+                                        <label asp-for="Sex" class="control-label">Giới tính</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" asp-for="Sex" type="radio" value="true">
+                                            <label class="form-check-label" asp-for="Sex" for="male">Nam</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" asp-for="Sex" type="radio" value="false">
+                                            <label class="form-check-label" asp-for="Sex" for="female">Nữ</label>
+                                        </div>
+                                        <span asp-validation-for="Sex" class="text-danger"></span>
+                                    </div> *@
+                                    <div class="form-group">
+
+                                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#modal-chage-pass">
+                                            Thay đổi mật khẩu
+                                        </button>
+                                    </div>
+
+                                    <div class="form-group mt-2 ">
+                                        <input type="submit" value="Cập nhật tài khoản" class="btn btn-dark text-white" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

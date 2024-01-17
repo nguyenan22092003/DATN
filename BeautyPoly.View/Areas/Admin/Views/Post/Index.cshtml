@@ -1,0 +1,187 @@
+﻿@using BeautyPoly.Data.ViewModels;
+@model PostViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Danh sách bài viết</h1>
+<div class="card-body p-1">
+
+    <div class="col-12">
+        <div class="font-weight-bold row m-0">
+            <div class="col-12 col-md-3 col-lg-3 p-1">
+                <div class="form-group m-0">
+                    <label>Từ khóa</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control form-control-sm" id="post_keyword" placeholder="Từ khóa ..." />
+                        <div class="input-group-append">
+                            <button class="btn btn-success btn-sm" onclick="return GetAll();">
+                                <i class="bx bx-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-hover table-bordered w-100" id="table_post">
+        <thead>
+            <tr>
+                <th style="width:10%" class="text-center">
+                    <button class="btn btn-primary btn-sm" id="btn_add_post" onclick="add()">
+                        <i class="bx bx-plus"></i>
+                    </button>
+                </th>
+                <th>Mã bài viết</th>
+                <th>Tiêu đề</th>
+                <th>Tóm tắt</th>
+                <th>Tác giả</th>
+                <th>Trang nhất</th>
+                <th>Ngày tạo</th>
+                <th>Trạng thái</th>
+            </tr>
+        </thead>
+        <tbody id="tbody_post">
+            <tr>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div id="modal_post" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm bài viết</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <input type="number" value="0" id="postid_post" hidden />
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="post_code_post" placeholder="Mã bài viết">
+                            <label for="post_code_post">Mã bài viết</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="post_title_post" placeholder="Tiêu đề">
+                            <label for="post_title_post">Tiêu đề</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="post_alias_post" placeholder="Bí danh">
+                            <label for="post_alias_post">Bí danh</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="post_tags_post" placeholder="Gắn thẻ">
+                            <label for="post_tags_post">Gắn thẻ</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="post_shortContents_post" placeholder="Tóm tắt">
+                            <label for="post_shortContents_post">Tóm tắt</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="post_author_post" placeholder="Tác giả">
+                            <label for="post_author_post">Tác giả</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-floating">
+                    <textarea class="form-control" placeholder="Nội dung" id="post_content_post" style="height: 150px"></textarea>
+
+                    <label for="post_content_post">Nội dung</label>
+                </div>
+                <div class="accordion-body">
+                    <label>Hình ảnh</label><br>
+                    <div class="row">
+                        <div class="col-3">
+                            <button class="btn btn-info" id="uploadBtn"><i class="bi bi-plus"></i> Thêm hình ảnh</button>
+                            <input type="file" id="fileInput" style="display: none;" multiple>
+                        </div>
+                    </div>
+                    <div id="imagePreviewContainer" class="row mt-3">
+                    </div>
+                </div>
+
+                @*                <div class="form-floating mb-3">
+                <select class="form-select" id="post_isPublished_post">
+                <option value="1">Được công bố</option>
+                <option value="0">Không công bố</option>
+                </select>
+                <label for="floatingSelect">Công bố</label>
+                </div>*@
+
+                @*                <div class="form-floating mb-3">
+                <select class="form-select" id="post_isHot_post">
+                <option value="1">Có</option>
+                <option value="0">Không</option>
+                </select>
+                <label for="floatingSelect">Tin nổi bật</label>
+                </div>*@
+                @*                <div class="form-floating mb-3">
+                <select class="form-select" id="post_isNewFeed_post">
+                <option value="1">Có</option>
+                <option value="0">Không</option>
+                </select>
+                <label for="floatingSelect">Trang nhất</label>
+                </div>*@
+
+
+                @*                <div class="form-floating mb-3">
+                <select class="form-select" id="post_status_post">
+                <option value="1">Đang hoạt động</option>
+                <option value="0">Không hoạt động</option>
+                </select>
+                <label for="floatingSelect">Trạng thái</label>
+                </div>*@
+
+                <div><label class="form-check-label" for="post_status_switch">Công bố</label><br></div>
+                <div class="form-check form-switch">                    
+                    <input class="form-check-input btn-lg" type="checkbox" id="post_isPublished_post">
+                </div>
+
+                <div><label class="form-check-label" for="post_status_switch">Tin nổi bật</label><br></div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input btn-lg" type="checkbox" id="post_isHot_post">
+                </div>
+
+                <div><label class="form-check-label" for="post_status_switch">Trang nhất</label><br></div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input btn-lg" type="checkbox" id="post_isNewFeed_post">
+                </div>
+
+                <div><label class="form-check-label" for="post_status_switch">Trạng thái</label><br></div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input btn-lg" type="checkbox" id="post_status_post">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn_save_post" onclick="createUpdate()">Lưu</button>
+
+                <button type="button" class="btn btn-secondary" id="btn_close_post" data-bs-dismiss="modal" onclick="removeImageOnClose()">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/post.js" asp-append-version="true"></script>
+    }
+
+

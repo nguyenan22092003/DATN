@@ -1,0 +1,84 @@
+﻿@model BeautyPoly.View.Models.ResetPasswordVm
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card p-2">
+    <!-- Logo -->
+   
+    <!-- /Logo -->
+    <div class="card-body mt-2">
+        <h4 class="mb-2">Đặt lại mật khẩu</h4>
+        @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+        {
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                @ViewData["ErrorMessage"]
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(ViewData["Sucsess"] as string))
+        {
+            <div class="alert alert-success" role="alert">
+                @ViewData["Sucsess"]
+            </div>
+        }
+
+        <form asp-action="ResetPass" id="formAuthentication" class="mb-3" method="POST">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-floating form-floating-outline mb-3">
+                <input asp-for="Email" type="text" class="form-control" id="Email" name="Email" placeholder="Nhập Email của bạn" />
+                <label for="Email">Email</label>
+            </div>
+            <div class="form-floating form-floating-outline mb-3">
+                <input asp-for="ConfirmCode" type="text" class="form-control" id="ConfirmCode" name="ConfirmCode" placeholder="Nhập mã xác nhận của bạn" />
+                <label for="ConfirmCode">Mã xác nhận</label>
+            </div>
+
+            <div class="mb-3 form-password-toggle">
+                <div class="input-group input-group-merge">
+                    <div class="form-floating form-floating-outline">
+                        <input asp-for="NewPassword"
+                               type="password"
+                               id="NewPassword"
+                               class="form-control"
+                               name="NewPassword"
+                               placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                               aria-describedby="NewPassword" />
+                        <label for="NewPassword">Mật khẩu mới</label>
+                    </div>
+                    <span class="input-group-text cursor-pointer"><i class="mdi mdi-eye-off-outline"></i></span>
+                </div>
+            </div>
+            <div class="mb-3 form-password-toggle">
+                <div class="input-group input-group-merge">
+                    <div class="form-floating form-floating-outline">
+                        <input asp-for="ConfirmPassword"
+                               type="password"
+                               id="confirmpassword"
+                               class="form-control"
+                               name="ConfirmPassword"
+                               placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                               aria-describedby="password" />
+                        <label for="password">Xác nhận mật khẩu</label>
+                    </div>
+                    <span class="input-group-text cursor-pointer"><i class="mdi mdi-eye-off-outline"></i></span>
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="reset" class="btn btn-secondary" onclick="goBack()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <script>
+                    function goBack() {
+                        window.history.back();
+                    }
+                </script>
+            </div>
+        </form>
+        
+
+       @*  <div class="text-center">
+            <h5>Đã có tài khoản?</h5>
+            <a href="~/Account/Login">
+                <span>Đăng nhập ngay</span>
+            </a>
+        </div> *@
+    </div>
+</div>

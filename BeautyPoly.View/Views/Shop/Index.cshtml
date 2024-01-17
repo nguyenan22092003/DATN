@@ -1,0 +1,64 @@
+﻿<main class="main-content">   
+    <!--== Start Product Area Wrapper ==-->
+    <section class="section-space">
+        <div class="container">
+            <div class="row justify-content-between flex-xl-row-reverse">
+                <div class="col-xl-9">
+                    <div class="row g-3 g-sm-6" id="load_product">
+                        <div class="col-12">
+                            <ul class="pagination justify-content-center me-auto ms-auto mt-5 mb-10">
+                                <li class="page-item">
+                                    <a class="page-link previous" href="product.html" aria-label="Previous">
+                                        <span class="fa fa-chevron-left" aria-hidden="true"></span>
+                                    </a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="product.html">01</a></li>
+                                <li class="page-item"><a class="page-link" href="product.html">02</a></li>
+                                <li class="page-item"><a class="page-link" href="product.html">03</a></li>
+                                <li class="page-item"><a class="page-link" href="product.html">....</a></li>
+                                <li class="page-item">
+                                    <a class="page-link next" href="product.html" aria-label="Next">
+                                        <span class="fa fa-chevron-right" aria-hidden="true"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3">
+                    <div class="product-sidebar-widget">
+                        <div class="product-widget-search">
+                            <form action="#">
+                                <input type="search" placeholder="Tìm kiếm ..." id="filter-keyword">
+                                <button type="submit" onclick="loadProductOfShop()"><i class="fa fa-search"></i></button>
+                            </form>
+                        </div>
+                        <div class="product-widget">
+                            <h4 class="product-widget-title">Danh mục</h4>
+                            <select class="form-control" id="shop-cate">
+                                <option value="0">--- Tất cả ---</option>
+                            </select>
+                        </div>
+                        <div class="product-widget">
+                            <h4 class="product-widget-title">Lọc khoảng giá</h4>
+                            <div class="product-widget-range-slider">
+                                <div class="slider-range" id="slider-range-shop"></div>
+                                <div class="slider-labels">
+                                    <span id="filter-min-shop"></span>
+                                    <span>—</span>
+                                    <span id="filter-max-shop"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-widget" id="shop-option">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--== End Product Area Wrapper ==-->    
+</main>
+
+<script src="~/js/shop_view.js"></script>

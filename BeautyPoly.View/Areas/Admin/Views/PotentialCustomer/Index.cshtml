@@ -1,0 +1,184 @@
+﻿@model BeautyPoly.Models.PotentialCustomer
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Danh sách tài khoản khách hàng</h1>
+<div class="card-body p-1">
+
+    <div class="col-12">
+        <div class="font-weight-bold row m-0">
+            <div class="col-12 col-md-3 col-lg-3 p-1">
+                <div class="form-group m-0">
+                    <label>Từ khóa</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control form-control-sm" id="customer_keyword" placeholder="Tên khách hàng..." />
+                        <div class="input-group-append">
+                            <button class="btn btn-success btn-sm" onclick="return GetAll();">
+                                <i class="bx bx-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-hover table-bordered w-100" id="table_customer">
+        <thead>
+            <tr class="text-center">
+                <th style="width:10%">
+                    <button class="btn btn-primary btn-sm" id="btn_add_customer" onclick="add()">
+                        <i class="bx bx-plus"></i>
+                    </button>
+                </th>
+                <th>Mã</th>
+                <th>Họ và tên</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Ngày tạo</th>
+            </tr>
+        </thead>
+        <tbody id="tbody_customer">
+            <tr>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div id="modal_customer" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm khách hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <input type="number" value="0" id="customerid_customer" hidden />
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="customer_name_customer" placeholder="Họ và tên">
+                            <label for="customer_name_customer">Họ và tên<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="customer_phone_customer" placeholder="Số điện thoại">
+                            <label for="customer_phone_customer">Số điện thoại<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="customer_email_customer" placeholder="Email">
+                            <label for="customer_email_customer">Email<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button collapsed btn-gradient" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                Địa chỉ<span class="text-danger"> (*)</span>
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
+                            <div class="accordion-body">
+                                <button class="btn btn-primary btn-sm" id="btn_add_customer" onclick="addLocation()">
+                                    <i class="bx bx-plus"></i>
+                                </button>
+                                <br />
+                                <div id="rlocationContainer">
+                                    <div class=" card border border-end-0 border-bottom-0 border-start-0 border-success mt-2" id="locations">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn_save_customer" onclick="create()">Lưu</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="modal_customer_edit" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm khách hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <input type="number" value="0" id="customerid_customer" hidden />
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="rcustomer_code_customer" placeholder="Mã khách hàng">
+                            <label for="customer_code_customer">Mã khách hàng<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-">
+                            <input type="text" class="form-control" id="rcustomer_name_customer" placeholder="Họ và tên">
+                            <label for="customer_name_customer">Họ và tên<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="rcustomer_phone_customer" placeholder="Số điện thoại">
+                            <label for="customer_phone_customer">Số điện thoại<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="rcustomer_email_customer" placeholder="Email">
+                            <label for="customer_email_customer">Email<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button collapsed btn-gradient" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                Địa chỉ<span class="text-danger"> (*)</span>
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
+                            <div class="accordion-body">
+                                @*  <button class="btn btn-primary btn-sm" id="btn_add_customer" onclick="addLocation()">
+                                <i class="bx bx-plus"></i>
+                                </button>
+                                <br /> *@
+                                <div id="locationContainer">
+                                    <div class=" card border border-end-0 border-bottom-0 border-start-0 border-success mt-2" id="locations">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*                     <button type="button" class="btn btn-primary" id="btn_save_customer" onclick="create()">Lưu</button>
+                *@                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/potential_customer.js" asp-append-version="true"></script>
+}
+
+
+

@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Quản lý danh mục sản phẩm</h1>
+
+<div class="card">
+    <div class="card-body">
+        <br />
+        <ul id="category-list" class="easyui-tree"></ul>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+        <button class="btn btn-primary btn-sm" onclick="addCate()">
+            <i class="bx bx-plus"></i> Thêm
+        </button>
+        <div>
+            <button class="btn btn-success btn-sm" onclick="editCate()">
+                <i class="bx bx-pencil"></i> Sửa
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="deleteCate()">
+                <i class="bx bx-trash"></i> Xóa
+            </button>
+        </div>
+    </div>
+</div>
+<div id="modal_cate" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thông tin danh mục</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <input type="number" value="0" id="cate_id_cate" hidden />
+            <input type="number" id="cate_parent_id_cate" hidden />
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-floating mb-3">
+                            <p>Thuộc danh mục: <span id="parent_cate"></span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="cate_code_cate" placeholder="Mã danh mục">
+                            <label for="cate_code_cate">Mã danh mục<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="cate_name_cate" placeholder="Tên danh mục">
+                            <label for="cate_name_cate">Tên danh mục<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                    <div id="category-edit-parentid">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <span class="error-message" id="error-message" style="color: red;float:right;margin-right:5%"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="createUpdate()">Lưu</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/category.js" asp-append-version="true"></script>
+    }
+

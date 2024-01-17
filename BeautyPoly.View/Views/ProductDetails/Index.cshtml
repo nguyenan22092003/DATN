@@ -1,0 +1,246 @@
+﻿@using BeautyPoly.Data.ViewModels;
+@using BeautyPoly.Models;
+@model Tuple<ProductViewModel>
+<section class="page-header-area pt-10 pb-9" data-bg-color="#FFF3DA">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="page-header-st3-content text-center text-md-start">
+                    <ol class="breadcrumb justify-content-center justify-content-md-start">
+                        <li class="breadcrumb-item"><a class="text-dark" href="index.html">Home</a></li>
+                        <li class="breadcrumb-item active text-dark" aria-current="page">Product Detail</li>
+                    </ol>
+                    <h2 class="page-header-title">Product Detail</h2>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <h5 class="showing-pagination-results mt-5 mt-md-9 text-center text-md-end">Showing Single Product</h5>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-space">
+    <div class="container">
+        <div class="row product-details">
+            <div class="col-lg-6">
+                <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner" style="height:693px !important">
+                        <input id="product_sku_id" type="number" hidden />
+                      @*   @foreach(var image in Model.Item2)
+                        {
+                            if (image.Image.Split('_')[1].Replace(".png","") == "1")
+                            {
+                                <div class="carousel-item active">
+                                    <img src="~/images/@image.Image" class="d-block" style="width:570px !important;height:693px !important" alt="@image.Image">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="carousel-item">
+                                    <img src="~/images/@image.Image" class="d-block" style="width:570px !important;height:693px !important" alt="@image.Image">
+                                </div>
+                            }
+
+                        }
+                        *@
+                   
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+               
+            </div>
+            <div class="col-lg-6">
+                <div class="product-details-content">
+                    <h5 class="product-details-collection">Premioum collection</h5>
+                    <h3 class="product-details-title">@Model.Item1.ProductName</h3>
+                    @if (Model.Item1.SaleID == 0)
+                    {
+                        <h5 id="price_text">@Model.Item1.PriceText ₫</h5>
+                    }
+                    else
+                    {
+                        <h5 id="price_text">@Model.Item1.PriceTextNew ₫</h5>
+                        <span id="price_text"><strike>@Model.Item1.PriceText ₫</strike></span>
+                    }
+                    <div class="product-details-qty-list" id="product_option">
+                    </div>
+                    <div class="product-details-pro-qty">
+                        <span id="inventory_productsku"></span>
+                        <input id="product_sku_inventory" value="0" hidden/>
+                        <div class="pro-qty">
+                            <input type="text" title="Quantity" value="01">
+                        </div>
+                    </div>
+                    <div class="product-details-action">
+                        <div class="prices" id="price_product_detail"></div>
+                        <div class="product-details-cart-wishlist">
+                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#action-CartAddModal" onclick="addToCart()">Add to cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+</section>
+<!--== End Product Details Area Wrapper ==-->
+<!--== Start Product Banner Area Wrapper ==-->
+<div class="container">
+    <!--== Start Product Category Item ==-->
+    <a href="product.html" class="product-banner-item">
+        <img src="assets/images/shop/banner/7.webp" width="1170" height="240" alt="Image-HasTech">
+    </a>
+    <!--== End Product Category Item ==-->
+</div>
+
+<section class="section-space">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-title">
+                    <h2 class="title">Related Products</h2>
+                    <p class="m-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis</p>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-n10">
+            <div class="col-12">
+                <div class="swiper related-product-slide-container">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide mb-10">
+                            <!--== Start Product Item ==-->
+                            <div class="product-item product-st2-item">
+                                <div class="product-thumb">
+                                    <a class="d-block" href="product-details.html">
+                                        <img src="assets/images/shop/8.webp" width="370" height="450" alt="Image-HasTech">
+                                    </a>
+                                    <span class="flag-new">new</span>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-rating">
+                                        <div class="rating">
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-half-o"></i>
+                                        </div>
+                                        <div class="reviews">150 reviews</div>
+                                    </div>
+                                    <h4 class="title"><a href="product-details.html">Readable content DX22</a></h4>
+                                    <div class="prices">
+                                        <span class="price">$210.00</span>
+                                        <span class="price-old">300.00</span>
+                                    </div>
+                                    <div class="product-action">
+                                        <button type="button" class="product-action-btn action-btn-cart" data-bs-toggle="modal" data-bs-target="#action-CartAddModal">
+                                            <span>Add to cart</span>
+                                        </button>
+                                        <button type="button" class="product-action-btn action-btn-quick-view" data-bs-toggle="modal" data-bs-target="#action-QuickViewModal">
+                                            <i class="fa fa-expand"></i>
+                                        </button>
+                                        <button type="button" class="product-action-btn action-btn-wishlist" data-bs-toggle="modal" data-bs-target="#action-WishlistModal">
+                                            <i class="fa fa-heart-o"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--== End prPduct Item ==-->
+                        </div>
+                        <div class="swiper-slide mb-10">
+                            <!--== Start Product Item ==-->
+                            <div class="product-item product-st2-item">
+                                <div class="product-thumb">
+                                    <a class="d-block" href="product-details.html">
+                                        <img src="assets/images/shop/7.webp" width="370" height="450" alt="Image-HasTech">
+                                    </a>
+                                    <span class="flag-new">new</span>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-rating">
+                                        <div class="rating">
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-half-o"></i>
+                                        </div>
+                                        <div class="reviews">150 reviews</div>
+                                    </div>
+                                    <h4 class="title"><a href="product-details.html">Readable content DX22</a></h4>
+                                    <div class="prices">
+                                        <span class="price">$210.00</span>
+                                        <span class="price-old">300.00</span>
+                                    </div>
+                                    <div class="product-action">
+                                        <button type="button" class="product-action-btn action-btn-cart" data-bs-toggle="modal" data-bs-target="#action-CartAddModal">
+                                            <span>Add to cart</span>
+                                        </button>
+                                        <button type="button" class="product-action-btn action-btn-quick-view" data-bs-toggle="modal" data-bs-target="#action-QuickViewModal">
+                                            <i class="fa fa-expand"></i>
+                                        </button>
+                                        <button type="button" class="product-action-btn action-btn-wishlist" data-bs-toggle="modal" data-bs-target="#action-WishlistModal">
+                                            <i class="fa fa-heart-o"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--== End prPduct Item ==-->
+                        </div>
+                        <div class="swiper-slide mb-10">
+                            <!--== Start Product Item ==-->
+                            <div class="product-item product-st2-item">
+                                <div class="product-thumb">
+                                    <a class="d-block" href="product-details.html">
+                                        <img src="assets/images/shop/5.webp" width="370" height="450" alt="Image-HasTech">
+                                    </a>
+                                    <span class="flag-new">new</span>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-rating">
+                                        <div class="rating">
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-half-o"></i>
+                                        </div>
+                                        <div class="reviews">150 reviews</div>
+                                    </div>
+                                    <h4 class="title"><a href="product-details.html">Readable content DX22</a></h4>
+                                    <div class="prices">
+                                        <span class="price">$210.00</span>
+                                        <span class="price-old">300.00</span>
+                                    </div>
+                                    <div class="product-action">
+                                        <button type="button" class="product-action-btn action-btn-cart" data-bs-toggle="modal" data-bs-target="#action-CartAddModal">
+                                            <span>Add to cart</span>
+                                        </button>
+                                        <button type="button" class="product-action-btn action-btn-quick-view" data-bs-toggle="modal" data-bs-target="#action-QuickViewModal">
+                                            <i class="fa fa-expand"></i>
+                                        </button>
+                                        <button type="button" class="product-action-btn action-btn-wishlist" data-bs-toggle="modal" data-bs-target="#action-WishlistModal">
+                                            <i class="fa fa-heart-o"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var productId = @Model.Item1.ProductID;
+</script>
+<script src="~/js/product_detail_view.js" asp-append-version="true"></script>

@@ -1,0 +1,317 @@
+﻿
+<section class="page-header-area pt-10 pb-9" data-bg-color="#FFF3DA">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="page-header-st3-content text-center text-md-start">
+                    <ol class="breadcrumb justify-content-center justify-content-md-start">
+                        <li class="breadcrumb-item"><a class="text-dark" href="index.html">Home</a></li>
+                        <li class="breadcrumb-item active text-dark" aria-current="page">My Account</li>
+                    </ol>
+                    <h2 class="page-header-title">My Account</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--== End Page Header Area Wrapper ==-->
+<!--== Start My Account Area Wrapper ==-->
+<section class="my-account-area section-space">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-4">
+                <div class="my-account-tab-menu nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link active" id="dashboad-tab" data-bs-toggle="tab" data-bs-target="#dashboad" type="button" role="tab" aria-controls="dashboad" aria-selected="true">Lời mở đầu</button>
+                    <button class="nav-link" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab" aria-controls="orders" aria-selected="false" onclick="GetOrder()"> Quản lý hóa đơn</button>
+               
+                    <button class="nav-link" id="address-edit-tab" data-bs-toggle="tab" data-bs-target="#address-edit" type="button" role="tab" aria-controls="address-edit" aria-selected="false" onclick="GetAllLocation()">Quản lý địa chỉ</button>
+                    <button class="nav-link" id="account-info-tab" data-bs-toggle="tab" data-bs-target="#account-info" type="button" role="tab" aria-controls="account-info" aria-selected="false" onclick="getDetailAccount()">Chi tiết tài khoản</button>
+                    @*                     <button class="nav-link" onclick="window.location.href='account-login.html'" type="button">Logout</button>
+                    *@
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-8">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="dashboad" role="tabpanel" aria-labelledby="dashboad-tab">
+                        <div class="myaccount-content">
+                            <h3>Dashboard</h3>
+                            <div class="welcome">
+                                <p>Xin chào, <strong> <span id="user_name_manager"></span> </strong></p>
+                            </div>
+                            <p>Chào mừng bạn đã đến với PolyBeauty. Bạn có thể quản lý đơn hàng, quản lý địa chỉ và thay đổi mật khẩu ở đây</p>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                        <div class="myaccount-content">
+                            <h3>Orders</h3>
+                            <div class="myaccount-table table-responsive text-center">
+                                <table class="table table-bordered">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Mã đơn hàng</th>
+                                            <th>Ngày đặt hàng</th>
+                                            <th>Ngày thanh toán</th>
+                                            <th>Trạng thái</th>
+                                            <th>Thành tiền</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody_order_customer">
+                                        <tr>
+                                            <td>HD_101710112023</td>
+                                            <td>10/11/2023</td>
+                                            <td>11/11/2023</td>
+                                            <td>Đang giao hàng</td>
+                                            <td>1.000.000 vnđ</td>
+                                            <td><a onclick="openmodalorder()" class="check-btn sqr-btn ">Xem chi tiết</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>HD_111810112023</td>
+                                            <td>10/11/2023</td>
+                                            <td>10/11/2023</td>
+                                            <td>Giao thành công</td>
+                                            <td>3.150.000 vnđ</td>
+                                            <td><a onclick="openmodalorder()" class="check-btn sqr-btn ">Xem chi tiết</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>HD_151810112023</td>
+                                            <td>10/11/2023</td>
+                                            <td>10/11/2023</td>
+                                            <td>Giao thành công</td>
+                                            <td>500.000 vnđ</td>
+                                            <td><a onclick="openmodalorder()" class="check-btn sqr-btn ">Xem chi tiết</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>HD_201910112023</td>
+                                            <td>10/11/2023</td>
+                                            <td>11/11/2023</td>
+                                            <td>Đã hủy</td>
+                                            <td>900.000 vnđ</td>
+                                            <td><a onclick="openmodalorder()" class="check-btn sqr-btn ">Xem chi tiết</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="download" role="tabpanel" aria-labelledby="download-tab">
+                        <div class="myaccount-content">
+                            <h3>Downloads</h3>
+                            <div class="myaccount-table table-responsive text-center">
+                                <table class="table table-bordered">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Date</th>
+                                            <th>Expire</th>
+                                            <th>Download</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Haven - Free Real Estate PSD Template</td>
+                                            <td>Aug 22, 2018</td>
+                                            <td>Yes</td>
+                                            <td><a href="#/" class="check-btn sqr-btn"><i class="fa fa-cloud-download"></i> Download File</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>HasTech - Profolio Business Template</td>
+                                            <td>Sep 12, 2018</td>
+                                            <td>Never</td>
+                                            <td><a href="#/" class="check-btn sqr-btn"><i class="fa fa-cloud-download"></i> Download File</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="payment-method" role="tabpanel" aria-labelledby="payment-method-tab">
+                        <div class="myaccount-content">
+                            <h3>Payment Method</h3>
+                            <p class="saved-message">You Can't Saved Your Payment Method yet.</p>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="address-edit" role="tabpanel" aria-labelledby="address-edit-tab">
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-info" onclick="addLocation()"><i class='bx bxs-message-square-add'></i></button>
+                        </div>
+                        <div id="locationContainer">
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Mặc định</th>
+                                    <th>Tỉnh</th>
+                                    <th>Quận/Huyện</th>
+                                    <th>Xã/Phường</th>
+                                    <th>Chi tiết</th>
+                                    <th>Acction</th>
+                                </tr>
+                            </thead>
+                            <tbody id="list-location" class="thead-light">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="account-info" role="tabpanel" aria-labelledby="account-info-tab">
+                        <div class="myaccount-content">
+                            <h3>Chi tiết tài khoản</h3>
+                            <div class="account-details-form">
+                                <form>
+                                    <div class="row">
+                                        <div class="">
+                                            <div class="single-input-item">
+                                                <label for="first-name">Họ và tên</label>
+                                                <input type="text" id="full-name" maxlength="100" />
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <div class="single-input-item">
+                                                <label for="last-name">Số điện thoại</label>
+                                                <input type="text" id="phone-number" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="single-input-item">
+                                        <label for="email" class="required">Địa chỉ Email</label>
+                                        <input type="email" id="email-address" disabled style="color:darkgray" />
+                                    </div>
+
+                                    <button type="button" class="btn btn-succes" id="btn_save_info">save</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="modal-oder-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <form>
+            <section class="h-100 gradient-custom">
+                <div class="container py-5 h-100">
+                    <div class="row d-flex justify-content-center align-items-center h-100">
+                        <div class="col-lg-10 col-xl-8">
+                            <div class="card" style="border-radius: 10px;">
+                                <div class="card-header px-4 py-5">
+                                    <h5 class="text-muted mb-0">Cảm ơn bạn đã mua hàng, <span style="color: #a8729a;" id="customer_name_order_detail">Trần Đức Duy</span>!</h5>
+                                </div>
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <p class="lead fw-normal mb-0" style="color: #a8729a;">Chi tiết đơn hàng</p>
+                                        <p class="small text-muted mb-0" >Mã đơn hàng: <span id="order_code_order_detail"></span></p>
+                                    </div>
+                                    <div id="product_order_detail"></div>
+                                    @* <div class="card shadow-0 border mb-4">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <img src="https://nuty.vn/Data/Sites/1/Product/28516/15nl.jpg"
+                                                         class="img-fluid" alt="Phone">
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                    <p class="text-muted mb-0">Kem Dưỡng Trắng Da </p>
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                    <p class="text-muted mb-0 small">
+                                                        Maybelline
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                    <p class="text-muted mb-0 small"> 15ml</p>
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                    <p class="text-muted mb-0 small">Số lượng: 1</p>
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                    <p class="text-muted mb-0 small">250.000 vnđ</p>
+                                                </div>
+                                            </div>
+                                            <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
+                                          
+                                        </div>
+                                    </div>
+                                    <div class="card shadow-0 border mb-4">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <img src="https://nuty.vn/Data/Sites/1/Product/29252/z4930049669240_9e68e6c2e4b0d4cbc82ffc4734e1f8e2.jpg"
+                                                         class="img-fluid" alt="Phone">
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                    <p class="text-muted mb-0">Son Kem Lì Maybelline New York</p>
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                    <p class="text-muted mb-0 small">
+                                                        Hồng Trà Sữa
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                    <p class="text-muted mb-0 small">5ml</p>
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                    <p class="text-muted mb-0 small">Số lượng: 1</p>
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                    <p class="text-muted mb-0 small">350.000 vnđ</p>
+                                                </div>
+                                            </div>
+                                            <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
+                                            @* <div class="row d-flex align-items-center">
+                                            <div class="col-md-2">
+                                            <p class="text-muted mb-0 small">Track Order</p>
+                                            </div>
+                                            <div class="col-md-10">
+                                            <div class="progress" style="height: 6px; border-radius: 16px;">
+                                            <div class="progress-bar" role="progressbar"
+                                            style="width: 20%; border-radius: 16px; background-color: #a8729a;" aria-valuenow="20"
+                                            aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <div class="d-flex justify-content-around mb-1">
+                                            <p class="text-muted mt-1 mb-0 small ms-xl-5">Out for delivary</p>
+                                            <p class="text-muted mt-1 mb-0 small ms-xl-5">Delivered</p>
+                                            </div>
+                                            </div>
+                                            </div> 
+                                        </div>
+                                    </div> *@
+
+                                    <div class="d-flex justify-content-between pt-2">
+                                        <p class="fw-bold mb-0">Order Details</p>
+                                        <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span> <span id="total_money_order_order_detail"></span></p>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between pt-2">
+                                        <p class="text-muted mb-0">Ngày thanh toán : <span id="payment_date_order_detail_customer"></span> 10/11/2023</p>
+                                        <p class="text-muted mb-0"><span class="fw-bold me-4">Giảm giá</span> <span id="discount_price_order_customer"></span></p>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between">
+                                        <p class="text-muted mb-0">Ngày đặt hàng : <span id="order_date_order_customer"></span></p>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between mb-5">
+                                        
+                                        <p class="text-muted mb-0"><span class="fw-bold me-4">Phí giao hàng:</span> <span id="ship_price_order_customer"></span></p>
+                                    </div>
+                                </div>
+                                <div class="card-footer border-0 px-4 py-5"
+                                     style="background-color: #a8729a; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                                    <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">
+                                        Tổng tiền: <span class="h2 mb-0 ms-2" id="total_amount_order_customer"></span>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </form>
+    </div>
+</div>
+
+
+<script src="~/js/customer.js" asp-append-version="true"></script>

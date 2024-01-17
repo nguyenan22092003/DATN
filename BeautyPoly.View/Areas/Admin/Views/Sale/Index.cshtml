@@ -1,0 +1,254 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Quản lý hạ giá sản phẩm - Sale</h1>
+<ul class="nav nav-tabs d-flex" id="mytabjustified" role="tablist">
+    <li class="nav-item flex-fill" role="presentation">
+        <button class="nav-link w-100 active" id="sale-tab" data-bs-toggle="tab" data-bs-target="#sale-justified" type="button" role="tab" aria-controls="home" aria-selected="true">Danh sách Sale</button>
+    </li>
+    <li class="nav-item flex-fill" role="presentation">
+        <button class="nav-link w-100" id="product-tab" data-bs-toggle="tab" data-bs-target="#product-justified" type="button" role="tab" aria-controls="profile" aria-selected="false" onclick="GetAllProductSkusSelectSale()">Danh sách sản phẩm</button>
+    </li>
+</ul>
+<div class="tab-content pt-2" id="mytabjustifiedcontent">
+    <div class="tab-pane fade show active" id="sale-justified" role="tabpanel" aria-labelledby="sale-tab">
+        <div class="card">
+            <div class="card-body p-2">
+                <br />
+                <div class="col-12">
+                    <div class="font-weight-bold row m-0">
+                        <div class="col-12 col-md-3 col-lg-3 p-1">
+                            <div class="form-group m-0">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control form-control-sm" id="sale_keyword" placeholder="Từ khóa ..." />
+                                    <div class="input-group-append">
+                                        <button class="btn btn-success btn-sm" onclick="return GetAll();">
+                                            <i class="bx bx-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive card-body p-2">
+                <table class="table table-striped table-hover table-bordered w-100" id="table_sale">
+                    <thead>
+                        <tr class="table-info">
+                            <th style="width:10%">
+                                <button class="btn btn-primary btn-sm" id="btn_add_sale" onclick="addSale()">
+                                    <i class="bx bx-plus"></i>
+                                </button>
+                            </th>
+                            <th>Tên chương trình</th>
+                            <th>Mã</th>
+                            <th>Số lượng</th>
+                            <th>Ngày áp dụng</th>
+                            <th>Ngày kết thúc</th>
+                            <th>Giá trị giảm</th>
+                            <th>Thời gian còn lại</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody_sale">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="product-justified" role="tabpanel" aria-labelledby="product-tab">
+        <div class="card">
+            <div class="card-body">
+                <br />
+                <div class="row mt-2 mb-3">
+                    <div class="col-6">
+                        <div>
+                            <input id="productsku_keyword_productsku" type="text" class="form-control" placeholder="Tìm kiếm" onchange="GetAllProductSkusSelectSale()">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <select class="form-control" id="select_option_productsku" onchange="ChangeOption(this.value), GetAllProductSkusSelectSale()">
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <select class="form-control" id="select_option_value_productsku" onchange="GetAllProductSkusSelectSale()">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive" style="max-height:50vh">
+                <table class="table table-striped table-hover table-bordered table-responsive" id="table_order">
+                    <thead>
+                        <tr class="table-info">
+                            <th class="text-center">STT</th>
+                            <th>Ảnh sản phẩm</th>
+                            <th>Mã sản phẩm</th>
+                            <th>Tên sản phẩm</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody_product">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal_sale_productsku" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+        <div class="modal-content">  
+            <div class="modal-header">
+                <h5 class="modal-title" id="productsku_title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <input type="number" value="0" id="productsku_id" hidden />
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr class="table-info">
+                            <th>Tên chương trình</th>
+                            <th>Giá gốc</th>
+                            <th>Giá sau giảm</th>
+                            <th>Ghi chú</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="list_sale">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">               
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="btn_save_sale_productsku" onclick="onSaveSaleOfProductSku()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal_sale" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thông tin Sale</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <input type="number" value="0" id="sale_id_sale" hidden />
+            <div class="modal-body">
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button collapsed btn-gradient" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                Chọn sản phẩm áp dụng
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
+                            <div class="accordion-body">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <br />
+                                        <div class="row mt-2 mb-3">
+                                            <div class="col-6">
+                                                <div>
+                                                    <input id="productsku_keyword" type="text" class="form-control" placeholder="Tìm kiếm" onchange="GetAllProductSkus()">
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <select class="form-control" id="select_option" onchange="ChangeOption(this.value), GetAllProductSkus()">
+                                                </select>
+                                            </div>
+                                            <div class="col-3">
+                                                <select class="form-control" id="select_option_value" onchange="GetAllProductSkus()">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="table-responsive" style="max-height:50vh">
+                                                <table class="table table-striped table-hover table-bordered table-responsive" id="table_order">
+                                                    <thead>
+                                                        <tr class="table-info">
+                                                            <th class="text-center"><input class="form-check-input" type="checkbox" onchange="ChangeProductSkuAllSelect(this.checked)" /></th>
+                                                            <th>Ảnh sản phẩm</th>
+                                                            <th>Mã sản phẩm</th>
+                                                            <th>Tên sản phẩm</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tbody_product_sale">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="sale_name_sale" placeholder="Tên chương trình Sale">
+                            <label for="sale_name_sale">Tên chương trình Sale<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="sale_code_sale" placeholder="Mã Sale" disabled>
+                            <label for="sale_code_sale">Mã Sale<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="sale_quantity_sale" placeholder="Số lượng Sale">
+                            <label for="sale_quantity_sale">Số lượng Sale<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-floating mb-3">
+                            <input type="datetime-local" class="form-control" id="sale_start_date_sale" placeholder="Ngày áp dụng">
+                            <label for="sale_start_date_sale">Ngày áp dụng<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-floating mb-3">
+                            <input type="datetime-local" class="form-control datetimepicker" id="sale_end_date_sale" placeholder="Ngày kết thúc">
+                            <label for="sale_end_date_sale">Ngày kết thúc<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="sale_type_sale" aria-label="Floating label select example">
+                                <option value="0">Giảm theo phần trăm</option>
+                                <option value="1">Giảm trực tiếp</option>
+                            </select>
+                            <label for="sale_type_sale">Kiểu giảm giá<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="sale_discount_value_sale" placeholder="Giá trị giảm">
+                            <label for="sale_discount_value_sale">Giá trị giảm<span class="text-danger">(*)</span></label>
+                        </div>
+                        <div id="discountValueError" style="color: red; display: none;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn_save_sale" onclick="createUpdate()">Lưu</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/sale.js" asp-append-version="true"></script>
+    }

@@ -1,0 +1,140 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Quản lý phiếu giảm giá - Voucher</h1>
+<div class="card-body p-1">
+
+    <div class="col-12">
+        <div class="font-weight-bold row m-0">
+            <div class="col-12 col-md-3 col-lg-3 p-1">
+                <div class="form-group m-0">
+                    <label>Từ khóa</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control form-control-sm" id="voucher_keyword" placeholder="Từ khóa ..." />
+                        <div class="input-group-append">
+                            <button class="btn btn-success btn-sm" onclick="return GetAll();">
+                                <i class="bx bx-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-hover table-bordered w-100" id="table_voucher">
+        <thead>
+            <tr class="table-info">
+                <th style="width:10%">
+                    <button class="btn btn-primary btn-sm" id="btn_add_voucher" onclick="addVoucher()">
+                        <i class="bx bx-plus"></i>
+                    </button>
+                </th>
+                <th>Tên chương trình</th>
+                <th>Mã</th>
+                <th>Số lượng</th>
+                <th>Ngày áp dụng</th>
+                <th>Ngày kết thúc</th>
+                <th>Giá trị giảm</th>
+                <th>Thời gian còn lại</th>
+            </tr>
+        </thead>
+        <tbody id="tbody_voucher">
+            <tr>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div id="modal_voucher" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thông tin Voucher</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <input type="number" value="0" id="voucher_id_voucher" hidden />
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="voucher_name_voucher" placeholder="Tên chương trình Voucher">
+                            <label for="voucher_name_voucher">Tên chương trình Voucher<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="voucher_code_voucher" placeholder="Mã Voucher" disabled>
+                            <label for="voucher_code_voucher">Mã Voucher<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="voucher_quantity_voucher" placeholder="Số lượng phiếu Voucher">
+                            <label for="voucher_quantity_voucher">Số lượng phiếu Voucher<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-floating mb-3">
+                            <input type="datetime-local" class="form-control" id="voucher_start_date_voucher" placeholder="Ngày áp dụng">
+                            <label for="voucher_start_date_voucher">Ngày áp dụng<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-floating mb-3">
+                            <input type="datetime-local" class="form-control datetimepicker" id="voucher_end_date_voucher" placeholder="Ngày kết thúc">
+                            <label for="voucher_end_date_voucher">Ngày kết thúc<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="voucher_type_voucher" aria-label="Floating label select example">
+                                <option value="0">Giảm theo phần trăm</option>
+                                <option value="1">Giảm trực tiếp</option>
+                            </select>
+                            <label for="voucher_type_voucher">Kiểu giảm giá<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="voucher_discount_value_voucher" placeholder="Giá trị giảm">
+                            <label for="voucher_discount_value_voucher">Giá trị giảm<span class="text-danger">(*)</span></label>
+                        </div>
+                        <div id="discountValueError" style="color: red; display: none;"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-floating mb-3">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="voucher_min_value_voucher" placeholder="Giá trị tối thiểu đơn hàng">
+                                <label for="voucher_min_value_voucher">Giá trị tối thiểu đơn hàng</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-floating mb-3" id="max_value">
+                            <input type="number" class="form-control" id="voucher_max_value_voucher" placeholder="Giảm tối đa" disabled>
+                            <label for="voucher_max_value_voucher">Giảm tối đa<span class="text-danger">(*)</span></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn_save_voucher" onclick="createUpdate()">Lưu</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/voucher.js" asp-append-version="true"></script>
+}
