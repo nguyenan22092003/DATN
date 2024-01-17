@@ -74,10 +74,11 @@ namespace BeautyPoly.View.Areas.Admin.Controllers
             }
             return Json(order, new System.Text.Json.JsonSerializerOptions());
         }
-        [HttpGet("admin/order/status/{statusId}?{orderCode}")]
-        public async Task<IActionResult> GetOrderStatus(int statusId, string orderCode = "")
+        [HttpGet("admin/order/status")]
+        public async Task<IActionResult> GetOrderStatus([FromQuery] int order_status = 1, [FromQuery] string order_keyword = "")
         {
-            var result = await orderRepo.FindAsync(x => (x.TransactStatusID == statusId || statusId == 0) && (x.OrderCode.Contains(orderCode) || orderCode == ""));
+            order_keyword = order_keyword == null ? string.Empty : order_keyword;
+            var result = await orderRepo.FindAsync(x => (x.TransactStatusID == order_status || order_status == 0) && (order_keyword.Contains(x.OrderCode == null ? "" : x.OrderCode) || order_keyword == ""));
             return Json(result.ToList(), new System.Text.Json.JsonSerializerOptions());
         }
         [HttpGet("admin/order/get-product")]

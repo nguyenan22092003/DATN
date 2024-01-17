@@ -8,13 +8,42 @@ async function exportToExcel() {
 
         worksheet.columns = [
             { header: 'STT', key: 'stt', width: 10 },
-            { header: 'MaDon', key: 'madon', width: 30 },
-            { header: 'TenNV', key: 'tennv', width: 30 },
+            { header: 'Mã đơn', key: 'madon', width: 30 },
+            { header: 'Tên nhân viên', key: 'tennv', width: 30 },
+            { header: 'Tên Khách hàng', key: 'tenkh', width: 30 },
+            { header: 'SĐT', key: 'sdt', width: 30 },
+            { header: 'Địa chỉ', key: 'diachi', width: 30 },
+            { header: 'Đơn giá', key: 'dongia', width: 30 },
+            { header: 'Giám giá', key: 'giamgia', width: 30 },
+            { header: 'Tổng tiền', key: 'tongtien', width: 30 },
+            { header: 'PTTT', key: 'pttt', width: 30 },
+            { header: 'PTM', key: 'ptm', width: 30 },
+            { header: 'Ngày đặt hàng', key: 'ndt', width: 30 },
+            { header: 'Ngày giao hàng', key: 'ngh', width: 30 },
+            { header: 'Ngày thanh toán', key: 'ntt', width: 30 },
+            { header: 'Ghi chú', key: 'note', width: 30 },
         ];
 
         let i = 1;
         orderList.forEach(function (element) {
-            worksheet.addRow({ stt: i, madon: element.OrderCode, tennv: element.CustomerName });
+            worksheet.addRow(
+                {
+                    stt: i,
+                    madon: element.OrderCode,
+                    tennv: "admin",
+                    tenkh: element.CustomerName,
+                    sdt: element.CustomerPhone,
+                    diachi: element.Address,
+                    dongia: 0,
+                    giamgia: 0,
+                    tongtien: element.TotalMoney,
+                    pttt: element.MedthodPayment == "cash" ? "Tiền mặt" : "Chuyển khoản",
+                    ptm: element.PurchaseMethod == "online" ? "Online" : "Mua tại quầy",
+                    ndt: getFormattedDateDMY(element.OrderDate),
+                    ngh: getFormattedDateDMY(element.ShipDate),
+                    ntt: getFormattedDateDMY(element.PaymentDate),
+                    note: element.Note
+                });
             i++;
         });
 
@@ -105,276 +134,73 @@ function GetProduct() {
         }
     });
 }
-function GetHDC(orderCode) {
+function OrderSearch(){
+    var status = parseInt(document.getElementById("order_status").value);
+    var keyword = document.getElementById("order_keyword").value;
+    
+    var url = '/admin/order/status?order_status=' + encodeURIComponent(status) + '&order_keyword=' + encodeURIComponent(keyword);
     $.ajax({
-        url: '/admin/order/status/1',
+        url: url,
         type: 'Get',
-        data: {
-            param1: parameter1,
-            //param2: parameter2
-        },
         success: function (result) {
-            $("#tbody_order_hc").empty();
+            console.log(result)
             var html = ``;
             var index = 0;
-
+            $("#tbody_order_hc").empty();
+            $("#order_button").empty();
             orderList = result;
             result.forEach(function (element) {
                 var payment = element.MedthodPayment == "cash" ? "Tiền mặt" : "Chuyển khoản"
                 var purchase = element.PurchaseMethod == "online" ? "Online" : "Mua tại quầy"
                 html += `
-                            <tr>
-                                <td class="text-center"> <input class="form-check-input gridCheck" type="checkbox" data-id="${element.OrderID}"></td>
-                                <td class="text-center">${++index}</td>
-                                <td class="text-center"><a href="#" onclick="addHDOrder(${element.OrderID})" class="card-link">${element.OrderCode}</a></td>
-                                <td class="text-center">Admin</td>
-                                <td class="text-left">${element.CustomerName}</td>
-                                <td class="text-center">${element.CustomerPhone}</td>
-                                <td class="text-left"hite-space: nowrap;">${element.Address}</td>
-                                <td class="text-center"></td>
-                                <td class="text-center"></td>
-                                <td class="text-center">${formatCurrency.format(element.TotalMoney)}</td>
-                                <td class="text-center">${payment}</td>
-                                <td class="text-center">${purchase}</td>
-                                <td class="text-center">${getFormattedDateDMY(element.OrderDate)}</td>
-                                <td class="text-center">${getFormattedDateDMY(element.ShipDate)}</td>
-                                <td class="text-center">${getFormattedDateDMY(element.PaymentDate)}</td>
-                                <td class="text-left">${element.Note}</td>
-                                <td class="text-center">
-                                    <button type="button" class="btn btn-info" onclick="Edit(${element.OrderID})"><i class="bx bx-pencil"></i></button>
-                                </td>
-                            </tr>`;
+                    <tr>
+                        <td class="text-center"> <input class="form-check-input gridCheck" type="checkbox" data-id="${element.OrderID}"></td>
+                        <td class="text-center">${++index}</td>
+                        <td class="text-center"><a href="#" onclick="addHDOrder(${element.OrderID})" class="card-link">${element.OrderCode}</a></td>
+                        <td class="text-center">Admin</td>
+                        <td class="text-left">${element.CustomerName}</td>
+                        <td class="text-center">${element.CustomerPhone}</td>
+                        <td class="text-left"hite-space: nowrap;">${element.Address}</td>
+                        <td class="text-center"></td>
+                        <td class="text-center"></td>
+                        <td class="text-center">${formatCurrency.format(element.TotalMoney)}</td>
+                        <td class="text-center">${payment}</td>
+                        <td class="text-center">${purchase}</td>
+                        <td class="text-center">${getFormattedDateDMY(element.OrderDate)}</td>
+                        <td class="text-center">${getFormattedDateDMY(element.ShipDate)}</td>
+                        <td class="text-center">${getFormattedDateDMY(element.PaymentDate)}</td>
+                        <td class="text-left">${element.Note}</td>
+                        <td class="text-center">
+                            <button type = "button" class="btn btn-info" onclick = "Edit(${element.OrderID})" ${status === 1 || status === 2 ? 'style="display:inline-block;"' : 'style="display:none;"' }> <i class="bx bx-pencil"></i></button >
+                        </td >
+                    </tr>`;
+               
+
             });
             $("#tbody_order_hc").append(html);
+            let html_2 = `
+                <div class="row">    
+                    <div class="col-6 justify-content-start">
+                        ${status === 1 ? '<button type="button" onclick="confirmOrder()" class="btn btn-success">Xác nhận(Chuẩn bị hàng)</button>' : ''}
+                        ${status === 2 || status === 3 ? '<button type="button" onclick="confirmOrder()" class="btn btn-success">Xác nhận</button>' : ''}
+                        ${status === 1 || status === 2 || status === 3 ? '<button type="button" onclick="payOrder()" class="btn btn-primary">Thanh toán</button>' : ''}
+                    </div>
+                    <div class="col-6 d-flex justify-content-end">
+                        ${status === 1 || status === 2 || status === 3 ? '<button type="button" onclick="cancelOrder()" class="btn btn-danger">Hủy đơn</button>' : ''}
+                    </div>
+                </div>
+            `;
+            $("#order_button").append(html_2);
         },
         error: function (err) {
             console.log(err)
         }
     });
-}
-function GetCLH() {
-    $.ajax({
-        url: '/admin/order/status/2',
-        type: 'Get',
-        success: function (result) {
-            $("#tbody_order_dd").empty();
-            var html = ``;
 
-            if (result.length > 0) {
-                var index = 0;
-                orderList = result;
-                result.forEach(function (element) {
-                    var payment = element.MedthodPayment == "cash" ? "Tiền mặt" : "Chuyển khoản"
-                    var purchase = element.PurchaseMethod == "online" ? "Online" : "Mua tại quầy"
-                    html += `
-                            <tr>
-                                <td class="text-center"> <input class="form-check-input gridCheck" type="checkbox" data-id="${element.OrderID}"></td>
-                                <td class="text-center">${++index}</td>
-                                <td class="text-center"><a href="#" onclick="addHDOrder(${element.OrderID})" class="card-link">${element.OrderCode}</a></td>
-                                <td class="text-center">Admin</td>
-                                <td class="text-left">${element.CustomerName}</td>
-                                <td class="text-center">${element.CustomerPhone}</td>
-                                <td class="text-left"hite-space: nowrap;">${element.Address}</td>
-                                <td class="text-center"></td>
-                                <td class="text-center"></td>
-                                <td class="text-center">${formatCurrency.format(element.TotalMoney)}</td>
-                                <td class="text-center">${payment}</td>
-                                <td class="text-center">${purchase}</td>
-                                    <td class="text-center">${getFormattedDateDMY(element.OrderDate)}</td>
-                                    <td class="text-center">${getFormattedDateDMY(element.ShipDate)}</td>
-                                    <td class="text-center">${getFormattedDateDMY(element.PaymentDate)}</td>
-                                    <td class="text-left">${element.Note}</td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-info" onclick="Edit(${element.OrderID})"><i class="bx bx-pencil"></i></button>
-                                    </td>
-                                </tr>`;
-                });
-            }
-            $("#tbody_order_dd").append(html);
-        },
-        error: function (err) {
-            console.log(err)
-        }
-    });
-}
-function GetDGH() {
-    $.ajax({
-        url: '/admin/order/status/3',
-        type: 'Get',
-        success: function (result) {
-            $("#tbody_order_cgh").empty();
-            var html = ``;
-            var index = 0;
-            orderList = result;
-            result.forEach(function (element) {
-                var payment = element.MedthodPayment == "cash" ? "Tiền mặt" : "Chuyển khoản"
-                var purchase = element.PurchaseMethod == "online" ? "Online" : "Mua tại quầy"
-                html += `
-                            <tr>
-                                <td class="text-center"> <input class="form-check-input gridCheck" type="checkbox" data-id="${element.OrderID}"></td>
-                                <td class="text-center">${++index}</td>
-                                <td class="text-center"><a href="#" onclick="addHDOrder(${element.OrderID})" class="card-link">${element.OrderCode}</a></td>
-                                <td class="text-center">Admin</td>
-                                <td class="text-left">${element.CustomerName}</td>
-                                <td class="text-center">${element.CustomerPhone}</td>
-                                <td class="text-left"hite-space: nowrap;">${element.Address}</td>
-                                <td class="text-center"></td>
-                                <td class="text-center"></td>
-                                <td class="text-center">${formatCurrency.format(element.TotalMoney)}</td>
-                                <td class="text-center">${payment}</td>
-                                <td class="text-center">${purchase}</td>
-                                <td class="text-center">${getFormattedDateDMY(element.OrderDate)}</td>
-                                <td class="text-center">${getFormattedDateDMY(element.ShipDate)}</td>
-                                <td class="text-center">${getFormattedDateDMY(element.PaymentDate)}</td>
-                                <td class="text-left">${element.Note}</td>
-                            </tr>`;
-            });
-            $("#tbody_order_cgh").append(html);
-        },
-        error: function (err) {
-            console.log(err)
-        }
-    });
-}
-function GetHD() {
-    $.ajax({
-        url: '/admin/order/status/4',
-        type: 'Get',
-        success: function (result) {
-            $("#tbody_order_hd").empty();
-            var html = ``;
-            var index = 0;
-            orderList = result;
-
-            result.forEach(function (element) {
-                var payment = element.MedthodPayment == "cash" ? "Tiền mặt" : "Chuyển khoản"
-                var purchase = element.PurchaseMethod == "online" ? "Online" : "Mua tại quầy"
-                html += `
-                            <tr>
-                                <td class="text-center"> <input class="form-check-input gridCheck" type="checkbox" data-id="${element.OrderID}"></td>
-                                <td class="text-center">${++index}</td>
-                                <td class="text-center"><a href="#" onclick="addHDOrder(${element.OrderID})" class="card-link">${element.OrderCode}</a></td>
-                                <td class="text-center">Admin</td>
-                                <td class="text-left">${element.CustomerName}</td>
-                                <td class="text-center">${element.CustomerPhone}</td>
-                                <td class="text-left"hite-space: nowrap;">${element.Address}</td>
-                                <td class="text-center"></td>
-                                <td class="text-center"></td>
-                                <td class="text-center">${formatCurrency.format(element.TotalMoney)}</td>
-                                <td class="text-center">${payment}</td>
-                                <td class="text-center">${purchase}</td>
-                                    <td class="text-center">${getFormattedDateDMY(element.OrderDate)}</td>
-                                    <td class="text-center">${getFormattedDateDMY(element.ShipDate)}</td>
-                                    <td class="text-center">${getFormattedDateDMY(element.PaymentDate)}</td>
-                                    <td class="text-left">${element.Note}</td>
-                                </tr>`;
-            });
-            $("#tbody_order_hd").append(html);
-        },
-        error: function (err) {
-            console.log(err)
-        }
-    });
-}
-function GetTC() {
-    $.ajax({
-        url: '/admin/order/status/5',
-        type: 'Get',
-        success: function (result) {
-            $("#tbody_order_gtc").empty();
-            var html = ``;
-            var index = 0;
-            orderList = result;
-            result.forEach(function (element) {
-                var payment = element.MedthodPayment == "cash" ? "Tiền mặt" : "Chuyển khoản"
-                var purchase = element.PurchaseMethod == "online" ? "Online" : "Mua tại quầy"
-                html += `
-                            <tr>
-                                <td class="text-center"> <input class="form-check-input gridCheck" type="checkbox" data-id="${element.OrderID}"></td>
-                                <td class="text-center">${++index}</td>
-                                <td class="text-center"><a href="#" onclick="addHDOrder(${element.OrderID})" class="card-link">${element.OrderCode}</a></td>
-                                <td class="text-center">Admin</td>
-                                <td class="text-left">${element.CustomerName}</td>
-                                <td class="text-center">${element.CustomerPhone}</td>
-                                <td class="text-left"hite-space: nowrap;">${element.Address}</td>
-                                <td class="text-center"></td>
-                                <td class="text-center"></td>
-                                <td class="text-center">${formatCurrency.format(element.TotalMoney)}</td>
-                                <td class="text-center">${payment}</td>
-                                <td class="text-center">${purchase}</td>
-                                    <td class="text-center">${getFormattedDateDMY(element.OrderDate)}</td>
-                                    <td class="text-center">${getFormattedDateDMY(element.ShipDate)}</td>
-                                    <td class="text-center">${getFormattedDateDMY(element.PaymentDate)}</td>
-                                    <td class="text-left">${element.Note}</td>
-                                </tr>`;
-            });
-            $("#tbody_order_gtc").append(html);
-        },
-        error: function (err) {
-            console.log(err)
-        }
-    });
-}
-function GetTatCa() {
-    $.ajax({
-        url: '/admin/order/status/5',
-        type: 'Get',
-        success: function (result) {
-            $("#tbody_order_gtc").empty();
-            var html = ``;
-            var index = 0;
-            orderList = result;
-            result.forEach(function (element) {
-                var payment = element.MedthodPayment == "cash" ? "Tiền mặt" : "Chuyển khoản"
-                var purchase = element.PurchaseMethod == "online" ? "Online" : "Mua tại quầy"
-                html += `
-                            <tr>
-                                <td class="text-center"> <input class="form-check-input gridCheck" type="checkbox" data-id="${element.OrderID}"></td>
-                                <td class="text-center">${++index}</td>
-                                <td class="text-center"><a href="#" onclick="addHDOrder(${element.OrderID})" class="card-link">${element.OrderCode}</a></td>
-                                <td class="text-center">Admin</td>
-                                <td class="text-left">${element.CustomerName}</td>
-                                <td class="text-center">${element.CustomerPhone}</td>
-                                <td class="text-left"hite-space: nowrap;">${element.Address}</td>
-                                <td class="text-center"></td>
-                                <td class="text-center"></td>
-                                <td class="text-center">${formatCurrency.format(element.TotalMoney)}</td>
-                                <td class="text-center">${payment}</td>
-                                <td class="text-center">${purchase}</td>
-                                    <td class="text-center">${getFormattedDateDMY(element.OrderDate)}</td>
-                                    <td class="text-center">${getFormattedDateDMY(element.ShipDate)}</td>
-                                    <td class="text-center">${getFormattedDateDMY(element.PaymentDate)}</td>
-                                    <td class="text-left">${element.Note}</td>
-                                </tr>`;
-            });
-            $("#tbody_order_gtc").append(html);
-        },
-        error: function (err) {
-            console.log(err)
-        }
-    });
 }
 $(document).ready(function () {
     GetProduct();
-    GetHDC();
-    $("#home-tab").on("click", function () {
-        GetHDC();
-    });
-    $("#profile-tab").on("click", function () {
-        GetCLH();
-    });
-    $("#contact-tab").on("click", function () {
-        GetDGH();
-    });
-    $("#home-tab1").on("click", function () {
-        GetHD();
-    });
-    $("#home-tab2").on("click", function () {
-        GetTC();
-    });
-    $("#home-tab3").on("click", function () {
-        GetTatCa();
-    });
+    OrderSearch();
     $("#modal_order").on("hidden.bs.modal", function () {
         $('#tbody_product').empty();
         $('#orderid_order').val(0);
