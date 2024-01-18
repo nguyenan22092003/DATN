@@ -1,5 +1,7 @@
 ﻿var productList = [];
 var orderList = [];
+
+var index = 0;
 async function exportToExcel() {
 
         // Create a new workbook
@@ -104,26 +106,36 @@ function addSanPham() {
             <input type="text" class="form-control item-quantity" id="product_quantity_${index}" oninput="formatNumberInputQuantity(this,${index})" onchange="onChangeQuantity(this,${index})"/>
         </td>
         <td class="text-end ">
-            <input type="text" class="form-control item-total" readonly style="background-color: #f9f4ee;"  id="product_total_${index}"/>
+            <input type="text" class="form-control item-total" readonly style="background-color: #f9f4ee;"  id="product_total_${index}" name="product_total"/>
         </td>
     </tr>`;
-
+    
     $('#tbody_product').append(html);
-
-
+    
     $(`.select-product`).select2({
         dropdownParent: $("#modal_order"),
         theme: "bootstrap-5",
     });
-
     index++;
+    
+}
+
+function GetTotalOrder() { 
+    let TotalOrder = 0;
+    console.log(index);
+    for (let i = 0; i < index; i++) {
+        let stringID = `product_total_${i}`;
+        TotalOrder += parseFloat(!!document.getElementById(stringID) ? document.getElementById(stringID).value.replaceAll(".", "") : 0);
+    }
+    let TotalCustom = !!document.getElementById("money_custom") ? document.getElementById("money_custom").value : 0;
+    document.getElementById("total_money").value = TotalOrder;
+    document.getElementById("excess_money").value = TotalCustom - TotalOrder;
 }
 function GetProduct() {
     $.ajax({
         url: '/admin/order/get-product',
         type: 'Get',
         success: function (result) {
-            //  console.log(result);
             if (result.length > 0) {
                 productList = result;
 
@@ -143,7 +155,6 @@ function OrderSearch(){
         url: url,
         type: 'Get',
         success: function (result) {
-            console.log(result)
             var html = ``;
             var index = 0;
             $("#tbody_order_hc").empty();
@@ -201,6 +212,7 @@ function OrderSearch(){
 $(document).ready(function () {
     GetProduct();
     OrderSearch();
+    
     $("#modal_order").on("hidden.bs.modal", function () {
         $('#tbody_product').empty();
         $('#orderid_order').val(0);
@@ -210,6 +222,9 @@ $(document).ready(function () {
         $('#order_note').val("");
         $('#customer_phone').val("");
         $("#payment_method").val("");
+        $("#money_custom").val(0);
+        $("#total_money").val(0);
+        $("#excess_money").val(0);
     });
 });
 function confirmOrder() {
@@ -565,7 +580,7 @@ function remove(index) {
     $(`#tr_${index}`).remove();
 }
 
-var index = 0;
+
 
 
 function onChangePrice(input, index) {
@@ -626,12 +641,13 @@ function changeProd(element, index) {
         }
         check.push(productID);
     });
+    
 
     var product = productList.find(p => p.ProductSkusID == id);
-   
-    $(`#product_price_${index}`).val(product.Price.toLocaleString('en-US'));
+    $(`#product_price_${index}`).val(!!product ? product.Price : 0);
     $(`#product_quantity_${index}`).val(1);
-    $(`#product_total_${index}`).val(product.Price.toLocaleString('en-US'));
+    $(`#product_total_${index}`).val(!!product ? product.Price : 0);
+    GetTotalOrder();
 }
 // Function to populate the invoice details
 function populateInvoiceDetails(data) {

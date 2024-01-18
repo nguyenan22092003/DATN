@@ -239,6 +239,28 @@
 
                                         </tbody>
                                     </table>
+                                    <div class="row" style="align-items:flex-end;">
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="money_custom" class="form-label">Tiền khách đưa</label>
+                                                <input type="text" class="form-control" id="money_custom" onchange="GetTotalOrder()">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="total_money" class="form-label">Tổng tiền</label>
+                                                <input type="text" class="form-control item-total" readonly style="background-color: #f9f4ee;" id="total_money" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="excess_money" class="form-label">Tiền thừa</label>
+                                                <input type="text" class="form-control" id="excess_money" readonly style="background-color: #f9f4ee;">
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    
                                 </div>
 
                             </div><!-- End Bordered Tabs -->
